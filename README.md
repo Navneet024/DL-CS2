@@ -1,4 +1,4 @@
-# DL-CS2
+# Gans on yelp dataset
 Deep Learning 
 # Yelp Image Generation using Generative Models
 
