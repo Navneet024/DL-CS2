@@ -63,14 +63,7 @@ class VAE(nn.Module):
         recon_x = self.decode(z)
         return recon_x, mu, log_var
 
-# Define the loss function
-def vae_loss_tanh(recon_x, x, mu, log_var, beta):
-    MSE = nn.functional.mse_loss(recon_x.view(-1, 3 * 64 * 64), x.view(-1, 3 * 64 * 64), reduction='sum')
-    D_KL = -0.5 * torch.sum(1 + log_var - mu.pow(2) - log_var.exp())
-    total_loss = MSE + beta * D_KL
-    return MSE, D_KL, total_loss
-
-# Load models
+# Load modelS
 model = VAE(beta=1.0)
 model.load_state_dict(torch.load('vae_epoch_50.pth'))  # Adjust path if needed
 model.eval()
@@ -78,32 +71,28 @@ model.eval()
 # Streamlit app layout
 st.title("VAE Image Generation App")
 
-# Upload image functionality
-st.sidebar.header("Upload an Image")
-uploaded_file = st.sidebar.file_uploader("Choose an image...", type=["jpg", "png", "jpeg"])
+# Input: Number of images to generate
+num_images = st.number_input("Enter the number of images to generate", min_value=1, max_value=10, value=1)
 
-# Image transformation and prediction
-if uploaded_file is not None:
-    image = Image.open(uploaded_file)
-    st.image(image, caption="Uploaded Image", use_column_width=True)
+# Button to generate images
+if st.button("Generate Images"):
+    generated_images = []
 
-    # Preprocess image
-    transform = transforms.Compose([
-        transforms.Resize((64, 64)),
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])  # Normalize to [-1, 1]
-    ])
-    image = transform(image).unsqueeze(0)  # Add batch dimension
+    # Generate images (using the VAE model)
+    with torch.no_grad():
+        for _ in range(num_images):
+            # Sample a random latent vector (z)
+            z = torch.randn(1, 512)  # Latent dimension is 512 as per the model definition
 
-    # Button to generate image
-    if st.button("Generate Image"):
-        # Generate image (using the VAE model)
-        with torch.no_grad():
-            recon_x, _, _ = model(image)
+            # Generate the image from the latent vector (forward pass through the model)
+            recon_x = model.decode(z)
 
-        # Rescale to [0, 1] range and convert to numpy
-        recon_x = (recon_x.squeeze().numpy() + 1) / 2  # From [-1, 1] to [0, 1]
-        recon_x = np.transpose(recon_x, (1, 2, 0))  # Convert to HxWxC format for visualization
+            # Rescale to [0, 1] range and convert to numpy
+            recon_x = (recon_x.squeeze().numpy() + 1) / 2  # From [-1, 1] to [0, 1]
+            recon_x = np.transpose(recon_x, (1, 2, 0))  # Convert to HxWxC format for visualization
+            
+            generated_images.append(recon_x)
 
-        # Display generated image
-        st.image(recon_x, caption="Generated Image", use_column_width=True)
+    # Display generated images
+    for idx, img in enumerate(generated_images):
+        st.image(img, caption=f"Generated Image {idx + 1}", use_column_width=True)
