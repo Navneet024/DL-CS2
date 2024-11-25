@@ -29,7 +29,7 @@ def preprocess_image(img):
     return img_array
 
 # Streamlit app
-st.title("EfficientNet Model - Image Classification")
+st.title("EfficientNet Model - Image and Text Classification")
 
 # Sidebar options
 option = st.sidebar.selectbox("Choose an action", ["Classify Image"])
@@ -42,7 +42,10 @@ if option == "Classify Image":
     
     # Load the uploaded image
     uploaded_image = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
-        
+    
+    # Text input
+    uploaded_text = st.text_input("Enter a caption for the image (optional)")
+
     if uploaded_image:
         # Open the image with PIL
         img = Image.open(uploaded_image)
@@ -51,16 +54,23 @@ if option == "Classify Image":
         try:
             # Preprocess the image
             img_array = preprocess_image(img)
+            
+            # Preprocess the text
+            # For simplicity, we will assume no preprocessing for the text.
+            # You can tokenize and pad it here if necessary.
+            # Example: text_vectorized = text_vectorizer(uploaded_text)
 
-            # Make prediction
-            predictions = model.predict(img_array)
+            # For now, we just pass the text as an empty string (or a placeholder)
+            text_array = np.array([uploaded_text])  # Modify this if needed for your specific use case.
+
+            # Make prediction (pass both image and text inputs)
+            predictions = model.predict([img_array, text_array])
             predicted_class = np.argmax(predictions, axis=1)
 
             # Display prediction
             st.write(f"Predicted class index: {predicted_class[0]}")
             
             # Optionally, display the class name if you have a class label mapping
-            # Replace this with your actual class names (as defined during training)
             class_names = ['inside', 'outside', 'drink', 'food', 'other']  # Example, replace with actual class names
             st.write(f"Predicted class name: {class_names[predicted_class[0]]}")
         
