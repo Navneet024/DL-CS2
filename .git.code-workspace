@@ -1,0 +1,36 @@
+{
+	"folders": [
+		{
+			"path": "../../Assignment1/GroupC/.git"
+		},
+		{
+			"name": "Deeplearning",
+			"path": "../../../Documents/Deeplearning/Deeplearning"
+		},
+		{
+			"name": "NLP",
+			"path": "../../../NLP"
+		},
+		{
+			"name": "NLP-1",
+			"path": "../../NLP-1"
+		},
+		{
+			"name": "GroupC-1",
+			"path": "../../Assignment1/GroupC-1"
+		},
+		{
+			"path": "../../Practice AI"
+		},
+		{
+			"path": "../../GPU test"
+		},
+		{
+			"name": "DL-CS2",
+			"path": "../../../Documents/Deeplearning/Deeplearning/DL-CS2"
+		}
+	],
+	"settings": {
+		"git.ignoreLimitWarning": true
+	}
+}
