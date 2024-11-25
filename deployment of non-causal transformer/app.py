@@ -3,12 +3,21 @@ from tensorflow.keras.models import load_model
 import numpy as np
 import re
 
-# Load the model
+import os
+import requests
+
 @st.cache_resource
 def load_model_only():
+    if not os.path.exists("transformer_model.h5"):
+        # Replace URL with your file's URL
+        url = "https://your_storage_url/transformer_model.h5"
+        response = requests.get(url)
+        with open("transformer_model.h5", "wb") as f:
+            f.write(response.content)
     return load_model("transformer_model.h5")
 
 model = load_model_only()
+
 
 # Word index from training (example)
 word_index = {
