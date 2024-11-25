@@ -53,6 +53,7 @@ if option == "Classify Image":
         st.write(f"Predicted class index: {predicted_class[0]}")
         
         # Optionally, display the class name if you have a class label mapping
-        # For example, if you have a list of class names:
-        class_names = ['Class1', 'Class2', 'Class3', 'Class4', 'Class5', 'Class6', 'Class7', 'Class8', 'Class9', 'Class10']  # Example, update according to your class labels
+        # Replace this with your actual class names (as defined during training)
+        class_names = ['inside', 'outside', 'drink', 'food', 'other']  # Example, replace with actual class names
         st.write(f"Predicted class name: {class_names[predicted_class[0]]}")
+
