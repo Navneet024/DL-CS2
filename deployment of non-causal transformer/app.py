@@ -10,7 +10,7 @@ import requests
 def load_model_only():
     if not os.path.exists("transformer_model.h5"):
         # Replace URL with your file's URL
-        url = "https://your_storage_url/transformer_model.h5"
+        url = "https://github.com/Navneet024/DL-CS2/blob/Production/deployment%20of%20non-causal%20transformer/transformer_model.h5"
         response = requests.get(url)
         with open("transformer_model.h5", "wb") as f:
             f.write(response.content)
