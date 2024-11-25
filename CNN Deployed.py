@@ -1,7 +1,8 @@
 import streamlit as st
 import numpy as np
-from tensorflow.keras.preprocessing.image import load_img, img_to_array
 import tensorflow as tf
+from tensorflow.keras.preprocessing.image import load_img, img_to_array
+from io import BytesIO
 
 # Load the trained model
 model = tf.keras.models.load_model('CNN.keras')
@@ -9,14 +10,13 @@ model = tf.keras.models.load_model('CNN.keras')
 # Define class labels
 class_labels = ['drink', 'food', 'inside', 'menu', 'outside']
 
-def predict_class(img_path):
-    # Load and preprocess the image
-    img = load_img(img_path, target_size=(128, 128))
-    img_array = img_to_array(img) / 255.0  # Normalize to [0, 1]
-    img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
+def predict_class(img):
+    # Preprocess the image: resize and normalize
+    img = img_to_array(img) / 255.0  # Normalize to [0, 1]
+    img = np.expand_dims(img, axis=0)  # Add batch dimension
 
     # Make prediction
-    predictions = model.predict(img_array)
+    predictions = model.predict(img)
     predicted_class_index = np.argmax(predictions, axis=1)[0]
     predicted_class = class_labels[predicted_class_index]
     predicted_probability = predictions[0][predicted_class_index]
@@ -31,15 +31,12 @@ uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png
 
 if uploaded_file is not None:
     # Display the uploaded image
-    st.image(uploaded_file, caption='Uploaded Image', use_column_width=True)
+    img = load_img(uploaded_file, target_size=(128, 128))  # Resize image to match the input shape of the model
+    st.image(img, caption='Uploaded Image', use_column_width=True)
 
-    # Predict the class
-    img_path = uploaded_file.name
-    with open(img_path, "wb") as f:
-        f.write(uploaded_file.getbuffer())
-
-    predicted_class, predicted_probability = predict_class(img_path)
+    # Predict the class using the in-memory image
+    predicted_class, predicted_probability = predict_class(img)
 
     # Display the prediction
-    st.write(f'Predicted class: {predicted_class}, Probability: {predicted_probability:.2f}')
-
+    st.write(f'Predicted class: {predicted_class}')
+    st.write(f'Probability: {predicted_probability:.2f}')
