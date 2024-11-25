@@ -2,15 +2,9 @@ import streamlit as st
 from tensorflow.keras.models import load_model
 import numpy as np
 import re
-
 import os
 import requests
-
-
-
 model = load_modeL('transformer_model.h5')
-
-
 # Word index from training (example)
 word_index = {
     "great": 1,
@@ -19,7 +13,6 @@ word_index = {
     "terrible": 4,
     # Add more...
 }
-
 # Preprocess and tokenize text
 def preprocess_and_tokenize(text, word_index, max_length=100):
     # Preprocessing
@@ -33,12 +26,9 @@ def preprocess_and_tokenize(text, word_index, max_length=100):
     else:
         tokens += [0] * (max_length - len(tokens))
     return np.array([tokens])  # Add batch dimension
-
 # Streamlit app interface
 st.title("Sentiment Analysis with Transformer Model")
-
 user_input = st.text_area("Enter a review to analyze:")
-
 if st.button("Analyze"):
     if user_input.strip():
         input_data = preprocess_and_tokenize(user_input, word_index)
