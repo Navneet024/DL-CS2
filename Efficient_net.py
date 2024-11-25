@@ -29,7 +29,7 @@ st.title("EfficientNet Model - Image Classification")
 option = st.sidebar.selectbox("Choose an action", ["Classify Image"])
 
 # Load the model at the start
-model = load_saved_model('Efficient_net.h5')
+model = load_saved_model('Efficient_Net.h5')
 
 if option == "Classify Image":
     st.header("Classify an Image")
