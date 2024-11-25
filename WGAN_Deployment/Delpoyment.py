@@ -5,8 +5,7 @@ from PIL import Image
 import os
 import io
 
-# Path to the trained model
-model_path = r"wgan_models-50.pth"  
+model_path='WGAN_Deployment/wgan_models-50.pth'
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Define the Generator class (same as the training script)
